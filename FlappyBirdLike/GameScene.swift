@@ -23,22 +23,22 @@ class GameScene: SKScene {
         self.addChild(sky)
         
         let bird = SKSpriteNode(imageNamed: "bird")
-        bird.position = CGPoint(x: self.size.width / 2, y: 200)
-        bird.zPosition = 2
+        bird.position = CGPoint(x: self.size.width / 2, y: 350)
+        bird.zPosition = 4
         self.addChild(bird)
         
         let ceiling = SKSpriteNode(imageNamed: "ceiling")
-        ceiling.position = CGPoint(x: self.size.width / 2, y: 300)
+        ceiling.position = CGPoint(x: self.size.width / 2, y: self.size.height)
         ceiling.zPosition = 3
         self.addChild(ceiling)
         
         let pipeUp = SKSpriteNode(imageNamed: "pipe")
-        pipeUp.position = CGPoint(x: self.size.width / 2, y: 100)
+        pipeUp.position = CGPoint(x: self.size.width / 2, y: 0)
         pipeUp.zPosition = 2
         self.addChild(pipeUp)
         
         let pipeDown = SKSpriteNode(imageNamed: "pipe")
-        pipeDown.position = CGPoint(x: self.size.width / 2, y: self.size.height)
+        pipeDown.position = CGPoint(x: self.size.width / 2, y: self.size.height + 100)
         pipeDown.zPosition = 2
         pipeDown.xScale = -1
         pipeDown.zRotation = .pi
