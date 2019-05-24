@@ -7,7 +7,6 @@
 //
 
 import SpriteKit
-import GameplayKit
 
 class GameScene: SKScene {
 
@@ -32,17 +31,17 @@ class GameScene: SKScene {
         ceiling.zPosition = 3
         self.addChild(ceiling)
         
-        let pipeUp = SKSpriteNode(imageNamed: "pipe")
-        pipeUp.position = CGPoint(x: self.size.width / 2, y: 0)
-        pipeUp.zPosition = 2
-        self.addChild(pipeUp)
-        
         let pipeDown = SKSpriteNode(imageNamed: "pipe")
-        pipeDown.position = CGPoint(x: self.size.width / 2, y: self.size.height + 100)
+        pipeDown.position = CGPoint(x: self.size.width / 2, y: 0)
         pipeDown.zPosition = 2
-        pipeDown.xScale = -1
-        pipeDown.zRotation = .pi
         self.addChild(pipeDown)
+        
+        let pipeUp = SKSpriteNode(imageNamed: "pipe")
+        pipeUp.position = CGPoint(x: self.size.width / 2, y: self.size.height + 100)
+        pipeUp.zPosition = 2
+        pipeUp.xScale = -1
+        pipeUp.zRotation = .pi
+        self.addChild(pipeUp)
     }
     
 }
