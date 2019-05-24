@@ -8,24 +8,24 @@
 
 /* Begin PBXBuildFile section */
 		6022D26A22955E1100BF0623 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6022D26922955E1100BF0623 /* AppDelegate.swift */; };
-		6022D26E22955E1100BF0623 /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = 6022D26D22955E1100BF0623 /* Actions.sks */; };
 		6022D27022955E1100BF0623 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6022D26F22955E1100BF0623 /* GameScene.swift */; };
 		6022D27222955E1100BF0623 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6022D27122955E1100BF0623 /* GameViewController.swift */; };
 		6022D27522955E1100BF0623 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6022D27322955E1100BF0623 /* Main.storyboard */; };
 		6022D27722955E1200BF0623 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6022D27622955E1200BF0623 /* Assets.xcassets */; };
 		6022D27A22955E1200BF0623 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6022D27822955E1200BF0623 /* LaunchScreen.storyboard */; };
+		6036C04C2297822D0037E9B8 /* ActionList.sks in Resources */ = {isa = PBXBuildFile; fileRef = 6036C04B2297822D0037E9B8 /* ActionList.sks */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		6022D26622955E1100BF0623 /* FlappyBirdLike.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlappyBirdLike.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6022D26922955E1100BF0623 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		6022D26D22955E1100BF0623 /* Actions.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Actions.sks; sourceTree = "<group>"; };
 		6022D26F22955E1100BF0623 /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
 		6022D27122955E1100BF0623 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		6022D27422955E1100BF0623 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		6022D27622955E1200BF0623 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6022D27922955E1200BF0623 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6022D27B22955E1200BF0623 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6036C04B2297822D0037E9B8 /* ActionList.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = ActionList.sks; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,13 +59,13 @@
 			isa = PBXGroup;
 			children = (
 				6022D26922955E1100BF0623 /* AppDelegate.swift */,
-				6022D26D22955E1100BF0623 /* Actions.sks */,
 				6022D26F22955E1100BF0623 /* GameScene.swift */,
 				6022D27122955E1100BF0623 /* GameViewController.swift */,
 				6022D27322955E1100BF0623 /* Main.storyboard */,
 				6022D27622955E1200BF0623 /* Assets.xcassets */,
 				6022D27822955E1200BF0623 /* LaunchScreen.storyboard */,
 				6022D27B22955E1200BF0623 /* Info.plist */,
+				6036C04B2297822D0037E9B8 /* ActionList.sks */,
 			);
 			path = FlappyBirdLike;
 			sourceTree = "<group>";
@@ -131,7 +131,7 @@
 				6022D27522955E1100BF0623 /* Main.storyboard in Resources */,
 				6022D27722955E1200BF0623 /* Assets.xcassets in Resources */,
 				6022D27A22955E1200BF0623 /* LaunchScreen.storyboard in Resources */,
-				6022D26E22955E1100BF0623 /* Actions.sks in Resources */,
+				6036C04C2297822D0037E9B8 /* ActionList.sks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
