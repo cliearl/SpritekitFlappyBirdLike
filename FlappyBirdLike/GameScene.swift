@@ -13,24 +13,14 @@ class GameScene: SKScene {
     override func didMove(to view: SKView) {
         createBird()
         createEnvironment()
-        
+        setupPipe()
     }
     
-    func createBird() {
-//        let birdArray = SKTextureAtlas(named: "Bird")
-        
+    func createBird() {        
         let bird = SKSpriteNode(imageNamed: "bird1")
         bird.position = CGPoint(x: self.size.width / 2, y: 350)
         bird.zPosition = 4
         self.addChild(bird)
-        
-        // 애니메이션 파트
-//        var aniArray = [SKTexture]()
-//        for i in 1...birdArray.textureNames.count {
-//            aniArray.append(SKTexture(imageNamed: "bird\(i)"))
-//        }
-//        let flyingAnimation = SKAction.animate(with: aniArray, timePerFrame: 0.1)
-//        bird.run(SKAction.repeatForever(flyingAnimation))
         
         guard let flyingBySKS = SKAction(named: "flying") else { return }
         bird.run(flyingBySKS)
@@ -41,7 +31,6 @@ class GameScene: SKScene {
         land.position = CGPoint(x: self.size.width / 2, y: 50)
         land.zPosition = 3
         self.addChild(land)
-        print(self.size.width / land.size.width)
         
         let sky = SKSpriteNode(imageNamed: "sky")
         sky.position = CGPoint(x: self.size.width / 2, y: 100)
@@ -52,7 +41,9 @@ class GameScene: SKScene {
         ceiling.position = CGPoint(x: self.size.width / 2, y: self.size.height)
         ceiling.zPosition = 3
         self.addChild(ceiling)
-        
+    }
+    
+    func setupPipe() {
         let pipeDown = SKSpriteNode(imageNamed: "pipe")
         pipeDown.position = CGPoint(x: self.size.width / 2, y: 0)
         pipeDown.zPosition = 2
