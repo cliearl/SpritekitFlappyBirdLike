@@ -8,21 +8,33 @@
 
 import SpriteKit
 
-class GameScene: SKScene {
+class GameScene: SKScene, SKPhysicsContactDelegate {
+    
+    var bird = SKSpriteNode()
 
     override func didMove(to view: SKView) {
         let bgColor = SKColor(red: 81.0 / 255.0, green: 192.0 / 255.0, blue: 201.0 / 255.0, alpha: 1.0)
         self.backgroundColor = bgColor
         
+        self.physicsWorld.contactDelegate = self
+        self.physicsWorld.gravity = CGVector(dx: 0, dy: -9.8)
+        
         createBird()
         createEnvironment()
-        setupPipe()
+        createInfinitePipe(duration: 4)
     }
     
     func createBird() {        
-        let bird = SKSpriteNode(imageNamed: "bird1")
+        bird = SKSpriteNode(imageNamed: "bird1")
         bird.position = CGPoint(x: self.size.width / 2, y: 350)
         bird.zPosition = Layer.bird
+        
+        bird.physicsBody = SKPhysicsBody(circleOfRadius: bird.size.height / 2)
+        bird.physicsBody?.categoryBitMask = PhysicsCategory.bird
+        bird.physicsBody?.contactTestBitMask = PhysicsCategory.land | PhysicsCategory.pipe | PhysicsCategory.ceiling | PhysicsCategory.score
+        bird.physicsBody?.collisionBitMask = PhysicsCategory.land | PhysicsCategory.pipe | PhysicsCategory.ceiling
+        bird.physicsBody?.affectedByGravity = true
+        bird.physicsBody?.isDynamic = true
         addChild(bird)
         
         guard let flyingBySKS = SKAction(named: "flying") else { return }
@@ -44,6 +56,11 @@ class GameScene: SKScene {
             land.position = CGPoint(x: CGFloat(i) * land.size.width, y: 0)
             land.zPosition = Layer.land
             
+            land.physicsBody = SKPhysicsBody(rectangleOf: land.size,
+                                             center: CGPoint(x: land.size.width / 2, y: land.size.height / 2))
+            land.physicsBody?.categoryBitMask = PhysicsCategory.land
+            land.physicsBody?.affectedByGravity = false
+            land.physicsBody?.isDynamic = false
             addChild(land)
             
             let moveLeft = SKAction.moveBy(x: -landTexture.size().width, y: 0, duration: 20)
@@ -70,6 +87,11 @@ class GameScene: SKScene {
             ceiling.anchorPoint = CGPoint.zero
             ceiling.position = CGPoint(x: CGFloat(i) * ceiling.size.width, y: self.size.height - ceiling.size.height / 2)
             ceiling.zPosition = Layer.ceiling
+            
+            ceiling.physicsBody = SKPhysicsBody(rectangleOf: ceiling.size, center: CGPoint(x: ceiling.size.width / 2, y: ceiling.size.height / 2))
+            ceiling.physicsBody?.categoryBitMask = PhysicsCategory.ceiling
+            ceiling.physicsBody?.affectedByGravity = false
+            ceiling.physicsBody?.isDynamic = false
             addChild(ceiling)
             
             let moveLeft = SKAction.moveBy(x: -ceilTexture.size().width, y: 0, duration: 3)
@@ -79,18 +101,91 @@ class GameScene: SKScene {
         }
     }
     
-    func setupPipe() {
-        let pipeDown = SKSpriteNode(imageNamed: "pipe")
-        pipeDown.position = CGPoint(x: self.size.width / 2, y: 0)
-        pipeDown.zPosition = Layer.pipe
-        self.addChild(pipeDown)
+    func setupPipe(pipeDistance:CGFloat) {
+        // 스프라이트 생성
+        let envAtlas = SKTextureAtlas(named: "Environment")
+        let pipeTexture = envAtlas.textureNamed("pipe")
         
-        let pipeUp = SKSpriteNode(imageNamed: "pipe")
-        pipeUp.position = CGPoint(x: self.size.width / 2, y: self.size.height + 100)
-        pipeUp.zPosition = Layer.pipe
+        let pipeDown = SKSpriteNode(texture: pipeTexture)
+        pipeDown.zPosition = Layer.pipe
+        pipeDown.physicsBody = SKPhysicsBody(rectangleOf: pipeTexture.size())
+        pipeDown.physicsBody?.categoryBitMask = PhysicsCategory.pipe
+        pipeDown.physicsBody?.isDynamic = false
+        
+        let pipeUp = SKSpriteNode(texture: pipeTexture)
         pipeUp.xScale = -1
         pipeUp.zRotation = .pi
-        self.addChild(pipeUp)
+        pipeUp.zPosition = Layer.pipe
+        pipeUp.physicsBody = SKPhysicsBody(rectangleOf: pipeTexture.size())
+        pipeUp.physicsBody?.categoryBitMask = PhysicsCategory.pipe
+        pipeUp.physicsBody?.isDynamic = false
+        
+        let pipeCollision = SKSpriteNode(color: UIColor.red, size: CGSize(width: 1, height: self.size.height))
+        pipeCollision.zPosition = Layer.pipe
+        pipeCollision.physicsBody = SKPhysicsBody(rectangleOf: pipeCollision.size)
+        pipeCollision.physicsBody?.categoryBitMask = PhysicsCategory.score
+        pipeCollision.physicsBody?.isDynamic = false
+        pipeCollision.name = "pipeCollision"
+        
+        addChild(pipeDown)
+        addChild(pipeUp)
+        addChild(pipeCollision)
+        
+        
+        // 스프라이트 배치
+        let max = self.size.height * 0.3
+        let xPos = self.size.width + pipeUp.size.width
+        let yPos = CGFloat(arc4random_uniform(UInt32(max))) + envAtlas.textureNamed("land").size().height
+        let endPos = self.size.width + (pipeDown.size.width * 2)
+        
+        pipeDown.position = CGPoint(x: xPos, y: yPos)
+        pipeUp.position = CGPoint(x: xPos, y: pipeDown.position.y + pipeDistance + pipeUp.size.height)
+        pipeCollision.position = CGPoint(x: xPos, y: self.size.height / 2)
+        
+        let moveAct = SKAction.moveBy(x: -endPos, y: 0, duration: 6)
+        let moveSeq = SKAction.sequence([moveAct, SKAction.removeFromParent()])
+        pipeDown.run(moveSeq)
+        pipeUp.run(moveSeq)
+        pipeCollision.run(moveSeq)
+    }
+    
+    func createInfinitePipe(duration:TimeInterval) {
+        let create = SKAction.run { [unowned self] in
+            self.setupPipe(pipeDistance: 100)
+        }
+        
+        let wait = SKAction.wait(forDuration: duration)
+        let actSeq = SKAction.sequence([create, wait])
+        run(SKAction.repeatForever(actSeq))
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.bird.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+        self.bird.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 7))
+    }
+    
+    func didBegin(_ contact: SKPhysicsContact) {
+        var collideBody = SKPhysicsBody()
+        
+        if contact.bodyA.categoryBitMask < contact.bodyB.categoryBitMask {
+            collideBody = contact.bodyB
+        } else {
+            collideBody = contact.bodyA
+        }
+        
+        let collideType = collideBody.categoryBitMask
+        switch collideType {
+        case PhysicsCategory.land:
+            print("land!")
+        case PhysicsCategory.ceiling:
+            print("ceiling!")
+        case PhysicsCategory.pipe:
+            print("pipe!")
+        case PhysicsCategory.score:
+            print("score!")
+        default:
+            break
+        }
     }
     
 }
