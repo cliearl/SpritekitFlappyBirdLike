@@ -230,12 +230,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         switch collideType {
         case PhysicsCategory.land:
             print("land!")
-            gameOver()
+            if gameState == .playing {
+                gameOver()
+            }
         case PhysicsCategory.ceiling:
             print("ceiling!")
         case PhysicsCategory.pipe:
             print("pipe!")
-            gameOver()
+            if gameState == .playing {
+                gameOver()
+            }
         case PhysicsCategory.score:
             score += 1
             print(score)
@@ -244,10 +248,85 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     
+    override func update(_ currentTime: TimeInterval) {
+        let rotation = self.bird.zRotation
+        if rotation > 0 {
+            self.bird.zRotation = min(rotation, 0.7)
+        } else {
+            self.bird.zRotation = max(rotation, -0.7)
+        }
+        
+        if self.gameState == .dead {
+            self.bird.physicsBody?.velocity.dx = 0
+        }
+    }
+    
     func gameOver() {
-        self.gameState = .dead
         damageEffect()
         cameraShake()
+        
+        self.bird.removeAllActions()
+        createGameoverBoard()
+        
+        self.gameState = .dead
+
+    }
+    
+    func recordBestScore() {
+        let userDefaults = UserDefaults.standard
+        var bestScore = userDefaults.integer(forKey: "bestScore")
+        
+        if self.score > bestScore {
+            bestScore = self.score
+            userDefaults.set(bestScore, forKey: "bestScore")
+        }
+        userDefaults.synchronize()
+    }
+    
+    func createGameoverBoard() {
+        recordBestScore()
+        
+        let gameoverBoard = SKSpriteNode(imageNamed: "gameoverBoard")
+        gameoverBoard.position = CGPoint(x: self.size.width / 2, y: -gameoverBoard.size.height)
+        gameoverBoard.zPosition = Layer.hud
+        addChild(gameoverBoard)
+        
+        var medal = SKSpriteNode()
+        if score >= 10 {
+            medal = SKSpriteNode(imageNamed: "medalPlatinum")
+        } else if score >= 5 {
+            medal = SKSpriteNode(imageNamed: "medalGold")
+        } else if score >= 3 {
+            medal = SKSpriteNode(imageNamed: "medalSilver")
+        } else if score >= 1 {
+            medal = SKSpriteNode(imageNamed: "medalBronze")
+        }
+        medal.position = CGPoint(x: -gameoverBoard.size.width * 0.27, y: gameoverBoard.size.height * 0.02)
+        medal.zPosition = 0.1
+        gameoverBoard.addChild(medal)
+        
+        let scoreLabel = SKLabelNode(fontNamed: "Minercraftory")
+        scoreLabel.fontSize = 13
+        scoreLabel.fontColor = .orange
+        scoreLabel.text = "\(self.score)"
+        scoreLabel.horizontalAlignmentMode = .left
+        scoreLabel.position = CGPoint(x: gameoverBoard.size.width * 0.35, y: gameoverBoard.size.height * 0.07)
+        scoreLabel.zPosition = 0.1
+        gameoverBoard.addChild(scoreLabel)
+        
+        let bestScore = UserDefaults.standard.integer(forKey: "bestScore")
+        let bestScoreLabel = SKLabelNode(fontNamed: "Minercraftory")
+        bestScoreLabel.fontSize = 13
+        bestScoreLabel.fontColor = .orange
+        bestScoreLabel.text = "\(bestScore)"
+        bestScoreLabel.horizontalAlignmentMode = .left
+        bestScoreLabel.position = CGPoint(x: gameoverBoard.size.width * 0.35, y: -gameoverBoard.size.height * 0.07)
+        bestScoreLabel.zPosition = 0.1
+        gameoverBoard.addChild(bestScoreLabel)
+        
+        gameoverBoard.run(SKAction.sequence([SKAction.moveTo(y: self.size.height / 2, duration: 1), SKAction.run {
+            self.speed = 0
+            }]))
     }
     
     func damageEffect() {
