@@ -211,9 +211,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.bird.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
             self.bird.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 7))
         case .dead:
-            let scene = GameScene(size: self.size)
-            let transition = SKTransition.doorsOpenHorizontal(withDuration: 1)
-            self.view?.presentScene(scene, transition: transition)
+            let touch = touches.first
+            if let location = touch?.location(in: self) {
+                let nodesArray = self.nodes(at: location)
+                if nodesArray.first?.name == "restartBtn" {
+                    
+                    let scene = GameScene(size: self.size)
+                    let transition = SKTransition.doorsOpenHorizontal(withDuration: 1)
+                    self.view?.presentScene(scene, transition: transition)
+                }
+            }
+            
         }
     }
     
@@ -323,6 +331,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         bestScoreLabel.position = CGPoint(x: gameoverBoard.size.width * 0.35, y: -gameoverBoard.size.height * 0.07)
         bestScoreLabel.zPosition = 0.1
         gameoverBoard.addChild(bestScoreLabel)
+        
+        let restartBtn = SKSpriteNode(imageNamed: "playBtn")
+        restartBtn.name = "restartBtn"
+        restartBtn.position = CGPoint(x: 0, y: -gameoverBoard.size.height * 0.35)
+        restartBtn.zPosition = 0.1
+        gameoverBoard.addChild(restartBtn)
         
         gameoverBoard.run(SKAction.sequence([SKAction.moveTo(y: self.size.height / 2, duration: 1), SKAction.run {
             self.speed = 0
