@@ -17,6 +17,7 @@ enum GameState {
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
     let cameraNode = SKCameraNode()
+    var bgmPlayer = SKAudioNode()
     
     var bird = SKSpriteNode()
     var gameState = GameState.ready {
@@ -43,6 +44,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         createBird()
         createEnvironment()
         createScore()
+        
+        // BGM 모듈
+        bgmPlayer = SKAudioNode(fileNamed: "bgm.mp3")
+        bgmPlayer.autoplayLooped = true
+        self.addChild(bgmPlayer)
         
         // 카메라 추가
         camera = cameraNode
@@ -208,6 +214,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.createInfinitePipe(duration: 4)
             
         case .playing:
+            self.run(SoundFX.wing)
             self.bird.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
             self.bird.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 7))
         case .dead:
@@ -215,13 +222,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if let location = touch?.location(in: self) {
                 let nodesArray = self.nodes(at: location)
                 if nodesArray.first?.name == "restartBtn" {
-                    
+                    self.run(SoundFX.swooshing)
                     let scene = GameScene(size: self.size)
                     let transition = SKTransition.doorsOpenHorizontal(withDuration: 1)
                     self.view?.presentScene(scene, transition: transition)
                 }
             }
-            
         }
     }
     
@@ -250,6 +256,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
         case PhysicsCategory.score:
             score += 1
+            self.run(SoundFX.point)
             print(score)
         default:
             break
@@ -275,6 +282,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         self.bird.removeAllActions()
         createGameoverBoard()
+        
+        self.bgmPlayer.run(SKAction.stop())
         
         self.gameState = .dead
 
@@ -351,6 +360,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         flashNode.zPosition = Layer.hud
         addChild(flashNode)
         flashNode.run(actionSequence)
+        
+        let wait = SKAction.wait(forDuration: 1)
+        let soundSequence = SKAction.sequence([SoundFX.hit, wait, SoundFX.die])
+        run(soundSequence)
     }
     
     func cameraShake() {

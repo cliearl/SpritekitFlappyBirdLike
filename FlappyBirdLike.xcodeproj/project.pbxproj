@@ -16,6 +16,12 @@
 		6022D27A22955E1200BF0623 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6022D27822955E1200BF0623 /* LaunchScreen.storyboard */; };
 		6022E5162297BA3D00592861 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6022E5152297BA3D00592861 /* Constants.swift */; };
 		6036C04C2297822D0037E9B8 /* ActionList.sks in Resources */ = {isa = PBXBuildFile; fileRef = 6036C04B2297822D0037E9B8 /* ActionList.sks */; };
+		6091943422C0B5AF00684B02 /* bgm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 6091942E22C0B5AF00684B02 /* bgm.mp3 */; };
+		6091943522C0B5AF00684B02 /* sfxSwooshing.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 6091942F22C0B5AF00684B02 /* sfxSwooshing.mp3 */; };
+		6091943622C0B5AF00684B02 /* sfxWing.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 6091943022C0B5AF00684B02 /* sfxWing.mp3 */; };
+		6091943722C0B5AF00684B02 /* sfxDie.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 6091943122C0B5AF00684B02 /* sfxDie.mp3 */; };
+		6091943822C0B5AF00684B02 /* sfxHit.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 6091943222C0B5AF00684B02 /* sfxHit.mp3 */; };
+		6091943922C0B5AF00684B02 /* sfxPoint.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 6091943322C0B5AF00684B02 /* sfxPoint.mp3 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +36,12 @@
 		6022D27B22955E1200BF0623 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6022E5152297BA3D00592861 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		6036C04B2297822D0037E9B8 /* ActionList.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = ActionList.sks; sourceTree = "<group>"; };
+		6091942E22C0B5AF00684B02 /* bgm.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = bgm.mp3; sourceTree = "<group>"; };
+		6091942F22C0B5AF00684B02 /* sfxSwooshing.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = sfxSwooshing.mp3; sourceTree = "<group>"; };
+		6091943022C0B5AF00684B02 /* sfxWing.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = sfxWing.mp3; sourceTree = "<group>"; };
+		6091943122C0B5AF00684B02 /* sfxDie.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = sfxDie.mp3; sourceTree = "<group>"; };
+		6091943222C0B5AF00684B02 /* sfxHit.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = sfxHit.mp3; sourceTree = "<group>"; };
+		6091943322C0B5AF00684B02 /* sfxPoint.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = sfxPoint.mp3; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,8 +84,22 @@
 				6036C04B2297822D0037E9B8 /* ActionList.sks */,
 				6022E5152297BA3D00592861 /* Constants.swift */,
 				600DBBDA22A60F42001C7E0F /* Minercraftory.ttf */,
+				6091943A22C0B5B700684B02 /* Sounds */,
 			);
 			path = FlappyBirdLike;
+			sourceTree = "<group>";
+		};
+		6091943A22C0B5B700684B02 /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				6091942E22C0B5AF00684B02 /* bgm.mp3 */,
+				6091943122C0B5AF00684B02 /* sfxDie.mp3 */,
+				6091943222C0B5AF00684B02 /* sfxHit.mp3 */,
+				6091943322C0B5AF00684B02 /* sfxPoint.mp3 */,
+				6091942F22C0B5AF00684B02 /* sfxSwooshing.mp3 */,
+				6091943022C0B5AF00684B02 /* sfxWing.mp3 */,
+			);
+			path = Sounds;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -135,10 +161,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				6022D27522955E1100BF0623 /* Main.storyboard in Resources */,
+				6091943722C0B5AF00684B02 /* sfxDie.mp3 in Resources */,
+				6091943822C0B5AF00684B02 /* sfxHit.mp3 in Resources */,
 				6022D27722955E1200BF0623 /* Assets.xcassets in Resources */,
 				600DBBDB22A60FEA001C7E0F /* Minercraftory.ttf in Resources */,
+				6091943422C0B5AF00684B02 /* bgm.mp3 in Resources */,
+				6091943522C0B5AF00684B02 /* sfxSwooshing.mp3 in Resources */,
 				6022D27A22955E1200BF0623 /* LaunchScreen.storyboard in Resources */,
 				6036C04C2297822D0037E9B8 /* ActionList.sks in Resources */,
+				6091943922C0B5AF00684B02 /* sfxPoint.mp3 in Resources */,
+				6091943622C0B5AF00684B02 /* sfxWing.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
