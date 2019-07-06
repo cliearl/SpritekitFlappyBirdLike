@@ -18,7 +18,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     let cameraNode = SKCameraNode()
     var bgmPlayer = SKAudioNode()
-    
     var bird = SKSpriteNode()
     var gameState = GameState.ready {
         didSet {
@@ -44,6 +43,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         createBird()
         createEnvironment()
         createScore()
+        createRain()
         
         // BGM 모듈
         bgmPlayer = SKAudioNode(fileNamed: "bgm.mp3")
@@ -61,7 +61,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         scoreLabel = SKLabelNode(fontNamed: "Minercraftory")
         scoreLabel.fontSize = 24
         scoreLabel.fontColor = .white
-        scoreLabel.position = CGPoint(x: self.size.width / 2, y: self.size.height - 60)
+        scoreLabel.position = CGPoint(x: self.size.width / 2,
+                                      y: self.size.height - 60)
         scoreLabel.zPosition = Layer.hud
         scoreLabel.horizontalAlignmentMode = .center
         scoreLabel.text = "\(score)"
@@ -83,6 +84,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         guard let flyingBySKS = SKAction(named: "flying") else { return }
         bird.run(flyingBySKS)
+        
+        // thruster 효과 추가
+        guard let thruster = SKEmitterNode(fileNamed: "thruster") else { return }
+        thruster.position = CGPoint.zero
+        thruster.position.x -= bird.size.width / 2
+        thruster.zPosition = -0.1
+        // Add 블렌딩 문제를 SKEffectNode로 해결
+        let thrusterEffectNode = SKEffectNode()
+        thrusterEffectNode.addChild(thruster)
+        bird.addChild(thrusterEffectNode)
     }
     
     func createEnvironment() {
@@ -101,14 +112,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             land.zPosition = Layer.land
             
             land.physicsBody = SKPhysicsBody(rectangleOf: land.size,
-                                             center: CGPoint(x: land.size.width / 2, y: land.size.height / 2))
+                                             center: CGPoint(x: land.size.width / 2,
+                                                             y: land.size.height / 2))
             land.physicsBody?.categoryBitMask = PhysicsCategory.land
             land.physicsBody?.affectedByGravity = false
             land.physicsBody?.isDynamic = false
             addChild(land)
             
-            let moveLeft = SKAction.moveBy(x: -landTexture.size().width, y: 0, duration: 20)
-            let moveReset = SKAction.moveBy(x: landTexture.size().width, y: 0, duration: 0)
+            let moveLeft = SKAction.moveBy(x: -landTexture.size().width,
+                                           y: 0, duration: 20)
+            let moveReset = SKAction.moveBy(x: landTexture.size().width,
+                                            y: 0, duration: 0)
             let moveSequence = SKAction.sequence([moveLeft, moveReset])
             land.run(SKAction.repeatForever(moveSequence))
         }
@@ -116,12 +130,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         for i in 0...skyRepeatNum {
             let sky = SKSpriteNode(texture: skyTexture)
             sky.anchorPoint = CGPoint.zero
-            sky.position = CGPoint(x: CGFloat(i) * sky.size.width, y: envAtlas.textureNamed("land").size().height)
+            sky.position = CGPoint(x: CGFloat(i) * sky.size.width,
+                                   y: envAtlas.textureNamed("land").size().height)
             sky.zPosition = Layer.sky
             addChild(sky)
             
-            let moveLeft = SKAction.moveBy(x: -skyTexture.size().width, y: 0, duration: 40)
-            let moveReset = SKAction.moveBy(x: skyTexture.size().width, y: 0, duration: 0)
+            let moveLeft = SKAction.moveBy(x: -skyTexture.size().width,
+                                           y: 0, duration: 40)
+            let moveReset = SKAction.moveBy(x: skyTexture.size().width,
+                                            y: 0, duration: 0)
             let moveSequence = SKAction.sequence([moveLeft, moveReset])
             sky.run(SKAction.repeatForever(moveSequence))
         }
@@ -129,10 +146,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         for i in 0...ceilRepearNum {
             let ceiling = SKSpriteNode(texture: ceilTexture)
             ceiling.anchorPoint = CGPoint.zero
-            ceiling.position = CGPoint(x: CGFloat(i) * ceiling.size.width, y: self.size.height - ceiling.size.height / 2)
+            ceiling.position = CGPoint(x: CGFloat(i) * ceiling.size.width,
+                                       y: self.size.height - ceiling.size.height / 2)
             ceiling.zPosition = Layer.ceiling
             
-            ceiling.physicsBody = SKPhysicsBody(rectangleOf: ceiling.size, center: CGPoint(x: ceiling.size.width / 2, y: ceiling.size.height / 2))
+            ceiling.physicsBody = SKPhysicsBody(rectangleOf: ceiling.size,
+                                                center: CGPoint(x: ceiling.size.width / 2,
+                                                                y: ceiling.size.height / 2))
             ceiling.physicsBody?.categoryBitMask = PhysicsCategory.ceiling
             ceiling.physicsBody?.affectedByGravity = false
             ceiling.physicsBody?.isDynamic = false
@@ -164,7 +184,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         pipeUp.physicsBody?.categoryBitMask = PhysicsCategory.pipe
         pipeUp.physicsBody?.isDynamic = false
         
-        let pipeCollision = SKSpriteNode(color: UIColor.red, size: CGSize(width: 1, height: self.size.height))
+        let pipeCollision = SKSpriteNode(color: UIColor.red,
+                                         size: CGSize(width: 1, height: self.size.height))
         pipeCollision.zPosition = Layer.pipe
         pipeCollision.physicsBody = SKPhysicsBody(rectangleOf: pipeCollision.size)
         pipeCollision.physicsBody?.categoryBitMask = PhysicsCategory.score
@@ -179,11 +200,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // 스프라이트 배치
         let max = self.size.height * 0.3
         let xPos = self.size.width + pipeUp.size.width
-        let yPos = CGFloat(arc4random_uniform(UInt32(max))) + envAtlas.textureNamed("land").size().height
+        let yPos = CGFloat(arc4random_uniform(UInt32(max)))
+            + envAtlas.textureNamed("land").size().height
         let endPos = self.size.width + (pipeDown.size.width * 2)
         
         pipeDown.position = CGPoint(x: xPos, y: yPos)
-        pipeUp.position = CGPoint(x: xPos, y: pipeDown.position.y + pipeDistance + pipeUp.size.height)
+        pipeUp.position = CGPoint(x: xPos,
+                                  y: pipeDown.position.y + pipeDistance + pipeUp.size.height)
         pipeCollision.position = CGPoint(x: xPos, y: self.size.height / 2)
         
         let moveAct = SKAction.moveBy(x: -endPos, y: 0, duration: 6)
@@ -304,7 +327,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         recordBestScore()
         
         let gameoverBoard = SKSpriteNode(imageNamed: "gameoverBoard")
-        gameoverBoard.position = CGPoint(x: self.size.width / 2, y: -gameoverBoard.size.height)
+        gameoverBoard.position = CGPoint(x: self.size.width / 2,
+                                         y: -gameoverBoard.size.height)
         gameoverBoard.zPosition = Layer.hud
         addChild(gameoverBoard)
         
@@ -318,7 +342,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         } else if score >= 1 {
             medal = SKSpriteNode(imageNamed: "medalBronze")
         }
-        medal.position = CGPoint(x: -gameoverBoard.size.width * 0.27, y: gameoverBoard.size.height * 0.02)
+        medal.position = CGPoint(x: -gameoverBoard.size.width * 0.27,
+                                 y: gameoverBoard.size.height * 0.02)
         medal.zPosition = 0.1
         gameoverBoard.addChild(medal)
         
@@ -327,7 +352,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         scoreLabel.fontColor = .orange
         scoreLabel.text = "\(self.score)"
         scoreLabel.horizontalAlignmentMode = .left
-        scoreLabel.position = CGPoint(x: gameoverBoard.size.width * 0.35, y: gameoverBoard.size.height * 0.07)
+        scoreLabel.position = CGPoint(x: gameoverBoard.size.width * 0.35,
+                                      y: gameoverBoard.size.height * 0.07)
         scoreLabel.zPosition = 0.1
         gameoverBoard.addChild(scoreLabel)
         
@@ -337,7 +363,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         bestScoreLabel.fontColor = .orange
         bestScoreLabel.text = "\(bestScore)"
         bestScoreLabel.horizontalAlignmentMode = .left
-        bestScoreLabel.position = CGPoint(x: gameoverBoard.size.width * 0.35, y: -gameoverBoard.size.height * 0.07)
+        bestScoreLabel.position = CGPoint(x: gameoverBoard.size.width * 0.35,
+                                          y: -gameoverBoard.size.height * 0.07)
         bestScoreLabel.zPosition = 0.1
         gameoverBoard.addChild(bestScoreLabel)
         
@@ -347,14 +374,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         restartBtn.zPosition = 0.1
         gameoverBoard.addChild(restartBtn)
         
-        gameoverBoard.run(SKAction.sequence([SKAction.moveTo(y: self.size.height / 2, duration: 1), SKAction.run {
-            self.speed = 0
-            }]))
+        gameoverBoard.run(SKAction.sequence([SKAction.moveTo(y: self.size.height / 2, duration: 1),
+                                             SKAction.run { self.speed = 0 }]))
     }
     
     func damageEffect() {
-        let flashNode = SKSpriteNode(color: UIColor(red: 1.0, green: 0.0, blue: 0.0, alpha: 1.0), size: self.size)
-        let actionSequence = SKAction.sequence([SKAction.wait(forDuration: 0.01), SKAction.removeFromParent()])
+        let flashNode = SKSpriteNode(color: UIColor(red: 1.0, green: 0.0, blue: 0.0, alpha: 1.0),
+                                     size: self.size)
+        let actionSequence = SKAction.sequence([SKAction.wait(forDuration: 0.01),
+                                                SKAction.removeFromParent()])
         flashNode.name = "flashNode"
         flashNode.position = CGPoint(x: self.size.width / 2, y: self.size.height / 2)
         flashNode.zPosition = Layer.hud
@@ -373,5 +401,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let shakeAction = SKAction.sequence([moveLeft, moveRight, moveLeft, moveRight, moveReset])
         shakeAction.timingMode = .easeInEaseOut
         self.cameraNode.run(shakeAction)
+    }
+    
+    func createRain() {
+        guard let rainField = SKEmitterNode(fileNamed: "rain") else { return }
+        rainField.position = CGPoint(x: self.size.width / 2, y: self.size.height)
+        rainField.zPosition = Layer.rain
+        rainField.advanceSimulationTime(30)
+        addChild(rainField)
     }
 }
