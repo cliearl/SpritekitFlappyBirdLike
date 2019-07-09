@@ -16,6 +16,9 @@ enum GameState {
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
+    var background = SKSpriteNode()
+    var tutorial = SKSpriteNode()
+    
     let cameraNode = SKCameraNode()
     var bgmPlayer = SKAudioNode()
     var bird = SKSpriteNode()
@@ -44,6 +47,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         createEnvironment()
         createScore()
         createRain()
+        createTutorial()
         
         // BGM 모듈
         bgmPlayer = SKAudioNode(fileNamed: "bgm.mp3")
@@ -100,7 +104,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let envAtlas = SKTextureAtlas(named: "Environment")
         let landTexture = envAtlas.textureNamed("land")
         let landRepeatNum = Int(ceil(self.size.width / landTexture.size().width))
-        let skyTexture = envAtlas.textureNamed("sky")
+//        let skyTexture = envAtlas.textureNamed("sky")
+        guard let skyTexture = self.background.texture else { return }
         let skyRepeatNum = Int(ceil(self.size.width / skyTexture.size().width))
         let ceilTexture = envAtlas.textureNamed("ceiling")
         let ceilRepearNum = Int(ceil(self.size.width / ceilTexture.size().width))
@@ -130,8 +135,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         for i in 0...skyRepeatNum {
             let sky = SKSpriteNode(texture: skyTexture)
             sky.anchorPoint = CGPoint.zero
-            sky.position = CGPoint(x: CGFloat(i) * sky.size.width,
-                                   y: envAtlas.textureNamed("land").size().height)
+//            sky.position = CGPoint(x: CGFloat(i) * sky.size.width,
+//                                   y: envAtlas.textureNamed("land").size().height)
+            sky.position = CGPoint(x: CGFloat(i) * sky.size.width, y: 0)
             sky.zPosition = Layer.sky
             addChild(sky)
             
@@ -226,6 +232,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         run(SKAction.repeatForever(actSeq))
     }
     
+    func createTutorial() {
+        tutorial = SKSpriteNode(imageNamed: "tutorial")
+        tutorial.position = CGPoint(x: self.size.width / 2, y: self.size.height / 2)
+        tutorial.zPosition = Layer.tutorial
+        addChild(tutorial)
+    }
+    
     // MARK: - Game Algorithm
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         switch gameState {
@@ -235,6 +248,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.bird.physicsBody?.isDynamic = true
             self.bird.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 10))
             self.createInfinitePipe(duration: 4)
+            
+            let fadeOut = SKAction.fadeOut(withDuration: 0.5)
+            let wait = SKAction.wait(forDuration: 0.5)
+            let remove = SKAction.removeFromParent()
+            let actSequence = SKAction.sequence([fadeOut, wait, remove])
+            self.tutorial.run(actSequence)
             
         case .playing:
             self.run(SoundFX.wing)
@@ -246,7 +265,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 let nodesArray = self.nodes(at: location)
                 if nodesArray.first?.name == "restartBtn" {
                     self.run(SoundFX.swooshing)
-                    let scene = GameScene(size: self.size)
+                    let scene = MenuScene(size: self.size)
                     let transition = SKTransition.doorsOpenHorizontal(withDuration: 1)
                     self.view?.presentScene(scene, transition: transition)
                 }

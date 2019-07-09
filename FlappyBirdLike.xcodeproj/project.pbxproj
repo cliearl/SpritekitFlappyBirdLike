@@ -15,6 +15,7 @@
 		6022D27722955E1200BF0623 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6022D27622955E1200BF0623 /* Assets.xcassets */; };
 		6022D27A22955E1200BF0623 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6022D27822955E1200BF0623 /* LaunchScreen.storyboard */; };
 		6022E5162297BA3D00592861 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6022E5152297BA3D00592861 /* Constants.swift */; };
+		6026284722D4563A00DE12A2 /* MenuScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6026284622D4563A00DE12A2 /* MenuScene.swift */; };
 		6036C04C2297822D0037E9B8 /* ActionList.sks in Resources */ = {isa = PBXBuildFile; fileRef = 6036C04B2297822D0037E9B8 /* ActionList.sks */; };
 		6091943422C0B5AF00684B02 /* bgm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 6091942E22C0B5AF00684B02 /* bgm.mp3 */; };
 		6091943522C0B5AF00684B02 /* sfxSwooshing.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 6091942F22C0B5AF00684B02 /* sfxSwooshing.mp3 */; };
@@ -37,6 +38,7 @@
 		6022D27922955E1200BF0623 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6022D27B22955E1200BF0623 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6022E5152297BA3D00592861 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		6026284622D4563A00DE12A2 /* MenuScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuScene.swift; sourceTree = "<group>"; };
 		6036C04B2297822D0037E9B8 /* ActionList.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = ActionList.sks; sourceTree = "<group>"; };
 		6091942E22C0B5AF00684B02 /* bgm.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = bgm.mp3; sourceTree = "<group>"; };
 		6091942F22C0B5AF00684B02 /* sfxSwooshing.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = sfxSwooshing.mp3; sourceTree = "<group>"; };
@@ -80,6 +82,7 @@
 			children = (
 				6022D26922955E1100BF0623 /* AppDelegate.swift */,
 				6022D26F22955E1100BF0623 /* GameScene.swift */,
+				6026284622D4563A00DE12A2 /* MenuScene.swift */,
 				6022D27122955E1100BF0623 /* GameViewController.swift */,
 				6022D27322955E1100BF0623 /* Main.storyboard */,
 				6022D27622955E1200BF0623 /* Assets.xcassets */,
@@ -199,6 +202,7 @@
 			files = (
 				6022D27022955E1100BF0623 /* GameScene.swift in Sources */,
 				6022D27222955E1100BF0623 /* GameViewController.swift in Sources */,
+				6026284722D4563A00DE12A2 /* MenuScene.swift in Sources */,
 				6022D26A22955E1100BF0623 /* AppDelegate.swift in Sources */,
 				6022E5162297BA3D00592861 /* Constants.swift in Sources */,
 			);
