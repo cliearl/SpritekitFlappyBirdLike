@@ -7,11 +7,14 @@
 //
 
 import SpriteKit
+import GameKit
 
 class GameViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        gameCenterAuthenticate()
         
         if let view = self.view as! SKView? {
             // Load the SKScene from 'GameScene.sks'
@@ -27,6 +30,19 @@ class GameViewController: UIViewController {
             view.showsFPS = true
             view.showsNodeCount = true
             view.showsPhysics = true
+        }
+    }
+    
+    func gameCenterAuthenticate() {
+        let localPlayer = GKLocalPlayer.local
+        localPlayer.authenticateHandler = {(viewController, error) -> Void in
+            if viewController != nil {
+                self.present(viewController!, animated: true, completion: nil)
+            } else if localPlayer.isAuthenticated {
+                print("logged in to Game Center")
+            } else {
+                
+            }
         }
     }
     

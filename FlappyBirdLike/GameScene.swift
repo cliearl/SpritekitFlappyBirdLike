@@ -7,6 +7,7 @@
 //
 
 import SpriteKit
+import GameKit
 
 enum GameState {
     case ready
@@ -265,6 +266,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     let scene = MenuScene(size: self.size)
                     let transition = SKTransition.doorsOpenHorizontal(withDuration: 1)
                     self.view?.presentScene(scene, transition: transition)
+                } else if nodesArray.first?.name == "leaderboard" {
+                    showLeaderboard()
                 }
             }
         }
@@ -341,6 +344,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func createGameoverBoard() {
         recordBestScore()
+        updateLeaderboard()
+        checkForAchievements()
         
         let gameoverBoard = SKSpriteNode(imageNamed: "gameoverBoard")
         gameoverBoard.position = CGPoint(x: self.size.width / 2,
@@ -390,6 +395,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         restartBtn.zPosition = 0.1
         gameoverBoard.addChild(restartBtn)
         
+        if GKLocalPlayer.local.isAuthenticated {
+            let leaderboard = SKSpriteNode(imageNamed: "gameCenterIcon")
+            leaderboard.name = "leaderboard"
+            leaderboard.position = CGPoint(x: 0, y: -gameoverBoard.size.height * 0.70)
+            leaderboard.zPosition = 0.1
+            gameoverBoard.addChild(leaderboard)
+        }
+        
         gameoverBoard.run(SKAction.sequence([SKAction.moveTo(y: self.size.height / 2, duration: 1),
                                              SKAction.run { self.speed = 0 }]))
     }
@@ -426,4 +439,73 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         rainField.advanceSimulationTime(30)
         addChild(rainField)
     }
+}
+
+extension GameScene: GKGameCenterControllerDelegate {
+    
+    func showLeaderboard() {
+        if GKLocalPlayer.local.isAuthenticated {
+            let gameCenter = GKGameCenterViewController()
+            
+            gameCenter.gameCenterDelegate = self
+            gameCenter.viewState = GKGameCenterViewControllerState.leaderboards
+            
+            if let gameViewController = self.view?.window?.rootViewController {
+                gameViewController.show(gameCenter, sender: self)
+                gameViewController.navigationController?.pushViewController(gameCenter, animated: true)
+            }
+        } else {
+            print("Not logged in!")
+        }
+    }
+    
+    func gameCenterViewControllerDidFinish(_ gameCenterViewController: GKGameCenterViewController) {
+        gameCenterViewController.dismiss(animated: true, completion: nil)
+    }
+    
+    func updateLeaderboard() {
+        if GKLocalPlayer.local.isAuthenticated {
+            let leaderboardIdentifier = "net.qualitybits.FlappyBirdLikeBestScore"
+            let bestScore = GKScore(leaderboardIdentifier: leaderboardIdentifier)
+            let ingameBestScore = UserDefaults.standard.integer(forKey: "bestScore")
+            bestScore.value = Int64(ingameBestScore)
+            let scoreArray: [GKScore] = [bestScore]
+            GKScore.report(scoreArray, withCompletionHandler: nil)
+        }
+    }
+    
+    func checkForAchievements() {
+        if GKLocalPlayer.local.isAuthenticated {
+            let ingameBestScore = UserDefaults.standard.integer(forKey: "bestScore")
+            
+            if ingameBestScore >= 10 {
+                let identifier = "net.qualitybits.FlappyBirdLikePlatinum"
+                let achieve = GKAchievement(identifier: identifier)
+                achieve.showsCompletionBanner = true
+                achieve.percentComplete = 100.0
+                GKAchievement.report([achieve], withCompletionHandler: nil)
+            } else if ingameBestScore >= 5 {
+                let identifier = "net.qualitybits.FlappyBirdLikeGold"
+                let achieve = GKAchievement(identifier: identifier)
+                achieve.showsCompletionBanner = true
+                achieve.percentComplete = 100.0
+                GKAchievement.report([achieve], withCompletionHandler: nil)
+            } else if ingameBestScore >= 3 {
+                let identifier = "net.qualitybits.FlappyBirdLikeSilver"
+                let achieve = GKAchievement(identifier: identifier)
+                achieve.showsCompletionBanner = true
+                achieve.percentComplete = 100.0
+                GKAchievement.report([achieve], withCompletionHandler: nil)
+            } else if ingameBestScore >= 1 {
+                let identifier = "net.qualitybits.FlappyBirdLikeBronze"
+                let achieve = GKAchievement(identifier: identifier)
+                achieve.showsCompletionBanner = true
+                achieve.percentComplete = 100.0
+                GKAchievement.report([achieve], withCompletionHandler: nil)
+            } else {
+                return
+            }
+        }
+    }
+    
 }
