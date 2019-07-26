@@ -34,7 +34,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     var scoreLabel = SKLabelNode()
-
+    
     // MARK: - Sprites Alignment
     override func didMove(to view: SKView) {
         let bgColor = SKColor(red: 81.0 / 255.0, green: 192.0 / 255.0, blue: 201.0 / 255.0, alpha: 1.0)
@@ -104,7 +104,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let envAtlas = SKTextureAtlas(named: "Environment")
         let landTexture = envAtlas.textureNamed("land")
         let landRepeatNum = Int(ceil(self.size.width / landTexture.size().width))
-//        let skyTexture = envAtlas.textureNamed("sky")
         guard let skyTexture = self.background.texture else { return }
         let skyRepeatNum = Int(ceil(self.size.width / skyTexture.size().width))
         let ceilTexture = envAtlas.textureNamed("ceiling")
@@ -135,8 +134,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         for i in 0...skyRepeatNum {
             let sky = SKSpriteNode(texture: skyTexture)
             sky.anchorPoint = CGPoint.zero
-//            sky.position = CGPoint(x: CGFloat(i) * sky.size.width,
-//                                   y: envAtlas.textureNamed("land").size().height)
             sky.position = CGPoint(x: CGFloat(i) * sky.size.width, y: 0)
             sky.zPosition = Layer.sky
             addChild(sky)
